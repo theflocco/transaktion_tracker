@@ -52,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(""),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Center(
             child: Column(
@@ -85,7 +84,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-          )
+          ),
+          this.kontostand.transaktionen.length > 0
+              ? Expanded(
+                child:new ListView.builder(
+                    itemCount: this.kontostand.transaktionen.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Center(child: new Text(this.kontostand.transaktionen[index].name));
+                    }),
+              )
+              : Text("Keine Einträge vorhanden")
         ],
       ),
     );
