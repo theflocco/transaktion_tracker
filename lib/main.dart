@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttermoneytracker/model/kontostand.dart';
+import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
 
 import 'model/transaktion.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       home: MyHomePage(),
     );
@@ -93,7 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       return Center(child: new Text(this.kontostand.transaktionen[index].name));
                     }),
               )
-              : Text("Keine Einträge vorhanden")
+              : Text("Keine Einträge vorhanden"),
+              AddTransaktionCard(),
         ],
       ),
     );
