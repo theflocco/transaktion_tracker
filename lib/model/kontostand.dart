@@ -1,6 +1,7 @@
 import 'package:fluttermoneytracker/model/transaktion.dart';
 
 class Kontostand {
+
   List<Transaktion> transaktionen = [];
 
 

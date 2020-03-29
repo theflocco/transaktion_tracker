@@ -76,6 +76,22 @@ class DatabaseHelper {
 		return result;
 	}
 
+	Future<double> getKontoStand() async {
+		double kontostand = 0;
+		var transaktionList = await getTransaktionList();
+		transaktionList.forEach((trans) =>
+		{
+			if (trans.isEinnahme) {
+				kontostand += trans.betrag
+			} else
+				{
+					kontostand -= trans.betrag
+				}
+		});
+
+		return kontostand;
+}
+
 	Future<List<Transaktion>> getTransaktionList() async {
 
 		var todoMapList = await getTransaktionMapList(); // Get 'Map List' from database
@@ -89,5 +105,7 @@ class DatabaseHelper {
 
 		return todoList;
 	}
+
+
 
 }

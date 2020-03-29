@@ -1,7 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:fluttermoneytracker/model/dbmodels/einnahmeTable.dart';
-import 'package:sqlcool/sqlcool.dart';
-import '../conf.dart' as conf;
 
 class Transaktion {
   int id;
@@ -41,7 +37,7 @@ class Transaktion {
   }
 
   bool mapToBool(int integer) {
-    if (int == 1) {
+    if (integer == 1) {
       return true;
     } else {
       return false;

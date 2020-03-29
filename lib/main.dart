@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/kontostand.dart';
-import 'package:fluttermoneytracker/repository/init_db.dart';
 import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
+import 'package:fluttermoneytracker/screens/main_screen/main_screen.dart';
+import 'package:fluttermoneytracker/screens/main_screen/transaktionen_screen.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqlcool/sqlcool.dart';
 
@@ -11,8 +12,6 @@ import 'model/transaktion.dart';
 
 void main() {
   runApp(MyApp());
-
-  initDb(db: new Db());
 }
 
 class MyApp extends StatelessWidget {
@@ -41,38 +40,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Kontostand kontostand = new Kontostand();
-  DatabaseHelper databaseHelper = new DatabaseHelper();
-  List<Transaktion> transList;
-  int count = 0;
 
-  void _addEinnahme() {
+
+  int _selectedIndex = 0;
+  static List<Widget> _widgetOptions = <Widget>[
+    MainScreen(),
+    TransaktionenScreen(),
+  ];
+
+  void _onItemTapped(int index) {
     setState(() {
-      Transaktion einnahme = new Transaktion("neue Einnahme", 1, new DateTime.now(), true);
-      kontostand.transaktionen.add(einnahme);
-      databaseHelper.insertTransaktion(einnahme);
-      updateListView();
-    });
-  }
-
-  void _addAusgbe() {
-    setState(() {
-      Transaktion ausgabe = new Transaktion("neue Ausgabe",1, new DateTime.now(), false);
-      kontostand.transaktionen.add(ausgabe);
-      databaseHelper.insertTransaktion(ausgabe);
-
-      updateListView();
+      _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (transList == null) {
-      transList = List<Transaktion>();
-      updateListView();
-    }
+
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -84,60 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text("Transaktionen"),
           ),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
       ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Kontostand: ',
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      kontostand.getKontostand().toString() + " €",
-                      style: Theme.of(context).textTheme.display1,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  FloatingActionButton(
-                    onPressed: _addEinnahme,
-                    tooltip: 'Hinzufügen',
-                    child: Icon(Icons.add),
-                  ),
-                  FloatingActionButton(
-                    onPressed: _addAusgbe,
-                    tooltip: 'Abziehen',
-                    child: Icon(Icons.remove),
-                  ),
-                ],
-              ),
-            ),
-            this.count > 0
-                ? Expanded(
-                    child: new ListView.builder(
-                        itemCount: this.count,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Center(
-                              child: new Text(
-                                  this.transList[index].name));
-                        }),
-                  )
-                : Text("Keine Einträge vorhanden"),
-          ],
-        ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -156,23 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: AddTransaktionCard(this.updateListView),
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: AddTransaktionCard(),
           ));
         });
   }
 
-  
-  void updateListView() {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    dbFuture.then((database) {
-      Future<List<Transaktion>> transListFuture = databaseHelper.getTransaktionList();
-      transListFuture.then((transList) {
-        setState(() {
-          this.transList = transList;
-          this.count = transList.length;
-        });
-      });
-    });
-  }
 }
