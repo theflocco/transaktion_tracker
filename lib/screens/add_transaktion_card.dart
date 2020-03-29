@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
+import 'package:fluttermoneytracker/model/transaktion.dart';
 
-class AddTransaktionCard extends StatelessWidget {
+class AddTransaktionCard extends StatefulWidget {
+  Function callback;
+  AddTransaktionCard(this.callback);
+  @override
+  _AddTransaktionCardState createState() => _AddTransaktionCardState(callback);
+}
+
+class _AddTransaktionCardState extends State<AddTransaktionCard> {
   final TextEditingController betragController = new TextEditingController();
+  final Function callback;
   final TextEditingController nameController = new TextEditingController();
+  DatabaseHelper helper = new DatabaseHelper();
+
+  _AddTransaktionCardState(this.callback);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,6 +47,7 @@ class AddTransaktionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   TextField(
+                    keyboardType: TextInputType.number,
                     controller: betragController,
                     style: TextStyle(fontSize: 18),
                     decoration: InputDecoration(
@@ -57,8 +72,10 @@ class AddTransaktionCard extends StatelessWidget {
                   FloatingActionButton(
                     backgroundColor: Colors.lightGreen,
                     child: Icon(Icons.add),
+                    onPressed: () => addTransaction(true),
                   ),
                   FloatingActionButton(
+                    onPressed: () => addTransaction(false),
                     backgroundColor: Colors.redAccent,
                     child: Icon(Icons.remove),
                   ),
@@ -69,5 +86,14 @@ class AddTransaktionCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  addTransaction(bool isEinnahme) {
+    if (betragController.value.toString().isNotEmpty) {
+      Transaktion einnahme = new Transaktion(nameController.text, double.parse(betragController.text), new DateTime.now(), isEinnahme);
+      this.helper.insertTransaktion(einnahme);
+      this.callback();
+      Navigator.of(context).pop();
+    }
   }
 }

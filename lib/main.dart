@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/kontostand.dart';
 import 'package:fluttermoneytracker/repository/init_db.dart';
 import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:sqlcool/sqlcool.dart';
 
 import 'model/transaktion.dart';
@@ -40,23 +42,36 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Kontostand kontostand = new Kontostand();
+  DatabaseHelper databaseHelper = new DatabaseHelper();
+  List<Transaktion> transList;
+  int count = 0;
 
   void _addEinnahme() {
     setState(() {
-      Einnahme einnahme = new Einnahme(1, "neue Einnahme", new DateTime.now());
+      Transaktion einnahme = new Transaktion("neue Einnahme", 1, new DateTime.now(), true);
       kontostand.transaktionen.add(einnahme);
+      databaseHelper.insertTransaktion(einnahme);
+      updateListView();
     });
   }
 
   void _addAusgbe() {
     setState(() {
-      Ausgabe ausgabe = new Ausgabe(1, "neue Ausgabe", new DateTime.now());
+      Transaktion ausgabe = new Transaktion("neue Ausgabe",1, new DateTime.now(), false);
       kontostand.transaktionen.add(ausgabe);
+      databaseHelper.insertTransaktion(ausgabe);
+
+      updateListView();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (transList == null) {
+      transList = List<Transaktion>();
+      updateListView();
+    }
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -110,14 +125,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            this.kontostand.transaktionen.length > 0
+            this.count > 0
                 ? Expanded(
                     child: new ListView.builder(
-                        itemCount: this.kontostand.transaktionen.length,
+                        itemCount: this.count,
                         itemBuilder: (BuildContext context, int index) {
                           return Center(
                               child: new Text(
-                                  this.kontostand.transaktionen[index].name));
+                                  this.transList[index].name));
                         }),
                   )
                 : Text("Keine Einträge vorhanden"),
@@ -137,13 +152,27 @@ class _MyHomePageState extends State<MyHomePage> {
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return SingleChildScrollView(
+           return SingleChildScrollView(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
                 height: MediaQuery.of(context).size.height * 0.3,
-                child: AddTransaktionCard()),
-          );
+                child: AddTransaktionCard(this.updateListView),
+          ));
         });
+  }
+
+  
+  void updateListView() {
+    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    dbFuture.then((database) {
+      Future<List<Transaktion>> transListFuture = databaseHelper.getTransaktionList();
+      transListFuture.then((transList) {
+        setState(() {
+          this.transList = transList;
+          this.count = transList.length;
+        });
+      });
+    });
   }
 }

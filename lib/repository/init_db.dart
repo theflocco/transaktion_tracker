@@ -24,6 +24,6 @@ Future<void> initDb({
   db.schema.describe();
 }
 
-Future<int> insertTransaktion(Einnahme trans) {
-  trans.sqlInsert(verbose: true);
+Future<int> insertTransaktion(Transaktion trans) {
+  //trans.sqlInsert(verbose: true);
 }

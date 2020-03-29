@@ -8,7 +8,7 @@ class Kontostand {
     double wert = 0;
     if (this.transaktionen.isNotEmpty) {
       this.transaktionen.forEach((trans) => {
-        if (trans is Einnahme) {
+        if (trans.isEinnahme) {
           wert += trans.betrag
         } else {
           wert -= trans.betrag

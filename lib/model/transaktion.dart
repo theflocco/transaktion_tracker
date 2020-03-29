@@ -4,57 +4,48 @@ import 'package:sqlcool/sqlcool.dart';
 import '../conf.dart' as conf;
 
 class Transaktion {
-  final String name;
+  int id;
+  String name;
   String description;
-  final double betrag;
-  final DateTime datum;
+  double betrag;
+  DateTime datum;
+  bool isEinnahme;
+
 
   Transaktion(
-      {@required this.name, @required this.betrag, @required this.datum});
-}
+       this.name, this.betrag, this.datum, this.isEinnahme);
+  Transaktion.withId(
+    this.id,
+       this.name, this.betrag, this.datum, this.isEinnahme);
 
-class Ausgabe extends Transaktion with DbModel {
-  Ausgabe(double betrag, String name, DateTime dateTime)
-      : super(betrag: betrag, name: name, datum: dateTime);
-
-  @override
-  int id;
-  @override
-  Db get db => conf.db;
-}
-
-class Einnahme extends Transaktion with DbModel {
-
-  Einnahme(double betrag, String name, DateTime dateTime)
-      : super(betrag: betrag, name: name, datum: dateTime);
-  @override
-  int id;
-  @override
-  Db get db => conf.db;
-
-  @override
-  DbTable get table => einnahmeTable;
-
-
-  @override
-  Map<String, dynamic> toDb() {
-    final row = <String, dynamic>{
-      "name": name,
-      "description": description,
-      "betrag": betrag,
-      "datum": datum,
-    };
-    return row;
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+    if (id != null) {
+      map['id'] = id;
+    }
+    map['name'] = name;
+    map['description'] = description;
+    map['betrag'] = betrag;
+    map['datum'] = datum.toIso8601String();
+    map['isEinnahme'] = isEinnahme ? 1 : 0;
+    return map;
   }
 
-  // @override
-  // Einnahme fromDb(Map<String, dynamic> map) {
-  //   final einnahme = Einnahme(
-  //     id: map["id"] as int,
-  //     name: map["name"].toString(),
-  //     betrag: map["betrag"] as double,
-  //     description: map["description"].toString(),
-  //     datum: map["datum"] as DateTime
-  //   );
-  // }
+  Transaktion.fromMapObject(Map<String, dynamic> map) {
+    this.id = map['id'];
+    this.name = map['name'];
+    this.description = map['description'];
+    this.betrag = map['betrag'];
+    this.datum = DateTime.parse(map['datum']);
+    this.isEinnahme = mapToBool(map['isEinnahme']);   
+  }
+
+  bool mapToBool(int integer) {
+    if (int == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+       
 }
