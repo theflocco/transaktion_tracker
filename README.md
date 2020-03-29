@@ -2,7 +2,14 @@
 
 Track your money
 
+
+## TODO
+
+Hot reload Liste
+Kontostand fixen
+
 ## Getting Started
+
 
 This project is a starting point for a Flutter application.
 
