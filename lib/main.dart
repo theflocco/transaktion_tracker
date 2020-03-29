@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttermoneytracker/model/kontostand.dart';
 import 'package:fluttermoneytracker/repository/init_db.dart';
@@ -19,6 +20,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TransactionApp',
       theme: ThemeData(
+        bottomSheetTheme:
+            BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
         primaryColor: Color(0xFF3EBACE),
         accentColor: Color(0xFFD8ECF1),
         scaffoldBackgroundColor: Color(0xFFF3F5F7),
@@ -68,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: SafeArea(
-              child: Column(
+        child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
@@ -78,10 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: <Widget>[
                     Text(
                       'Kontostand: ',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold
-                      ),
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       kontostand.getKontostand().toString() + " €",
@@ -120,10 +121,29 @@ class _MyHomePageState extends State<MyHomePage> {
                         }),
                   )
                 : Text("Keine Einträge vorhanden"),
-                AddTransaktionCard(),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Colors.blue,
+        onPressed: () => onButtonPressed(context),
+      ),
     );
+  }
+
+  onButtonPressed(BuildContext context) {
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return SingleChildScrollView(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: AddTransaktionCard()),
+          );
+        });
   }
 }
