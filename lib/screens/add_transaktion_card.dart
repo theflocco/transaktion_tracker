@@ -32,7 +32,6 @@ class AddTransaktionCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Betrag eingeben"),
                   TextField(
                     controller: betragController,
                     style: TextStyle(fontSize: 18),
@@ -44,7 +43,6 @@ class AddTransaktionCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Name eingeben"),
                   TextField(
                     controller: nameController,
                     style: TextStyle(fontSize: 18),

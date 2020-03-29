@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:fluttermoneytracker/model/kontostand.dart';
+import 'package:fluttermoneytracker/repository/init_db.dart';
 import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
+import 'package:sqlcool/sqlcool.dart';
 
 import 'model/transaktion.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+
+  initDb(db: new Db());
+}
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'TransactionApp',
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primaryColor: Color(0xFF3EBACE),
+        accentColor: Color(0xFFD8ECF1),
+        scaffoldBackgroundColor: Color(0xFFF3F5F7),
       ),
       home: MyHomePage(),
     );
@@ -47,56 +55,74 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(""),
-      ),
-      body: Column(
-        children: <Widget>[
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Kontostand: ',
-                ),
-                Text(
-                  kontostand.getKontostand().toString(),
-                  style: Theme.of(context).textTheme.display1,
-                ),
-              ],
-            ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text("Home"),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                FloatingActionButton(
-                  onPressed: _addEinnahme,
-                  tooltip: 'Hinzufügen',
-                  child: Icon(Icons.add),
-                ),
-                FloatingActionButton(
-                  onPressed: _addAusgbe,
-                  tooltip: 'Abziehen',
-                  child: Icon(Icons.remove),
-                ),
-              ],
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            title: Text("Transaktionen"),
           ),
-          this.kontostand.transaktionen.length > 0
-              ? Expanded(
-                child:new ListView.builder(
-                    itemCount: this.kontostand.transaktionen.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Center(child: new Text(this.kontostand.transaktionen[index].name));
-                    }),
-              )
-              : Text("Keine Einträge vorhanden"),
-              AddTransaktionCard(),
         ],
+      ),
+      body: SafeArea(
+              child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Kontostand: ',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      kontostand.getKontostand().toString() + " €",
+                      style: Theme.of(context).textTheme.display1,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  FloatingActionButton(
+                    onPressed: _addEinnahme,
+                    tooltip: 'Hinzufügen',
+                    child: Icon(Icons.add),
+                  ),
+                  FloatingActionButton(
+                    onPressed: _addAusgbe,
+                    tooltip: 'Abziehen',
+                    child: Icon(Icons.remove),
+                  ),
+                ],
+              ),
+            ),
+            this.kontostand.transaktionen.length > 0
+                ? Expanded(
+                    child: new ListView.builder(
+                        itemCount: this.kontostand.transaktionen.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Center(
+                              child: new Text(
+                                  this.kontostand.transaktionen[index].name));
+                        }),
+                  )
+                : Text("Keine Einträge vorhanden"),
+                AddTransaktionCard(),
+          ],
+        ),
       ),
     );
   }
