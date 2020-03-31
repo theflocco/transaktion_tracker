@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
+import 'package:fluttermoneytracker/screens/main_screen/transaktion_detail_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -75,8 +76,13 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
                 child: new ListView.builder(
                     itemCount: this.count,
                     itemBuilder: (BuildContext context, int index) {
-                      return Center(
-                          child:  ListElement(this.transList[index]));
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => TransaktionDetailScreen(this.transList[index])));
+                        },
+                        child: Center(
+                            child:  ListElement(this.transList[index])),
+                      );
                     }),
               )
             : Text("Keine Einträge vorhanden"),
