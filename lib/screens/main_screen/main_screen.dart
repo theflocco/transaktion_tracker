@@ -21,9 +21,12 @@ class _MainScreenState extends State<MainScreen> {
     dbFuture.then((database) {
       Future<double> kontostandFuture = databaseHelper.getKontoStand();
       kontostandFuture.then((kontostandDouble) => {
-      setState(() {
-        this.kontostandValue = kontostandDouble;
-      })
+        if (kontostandDouble != this.kontostandValue) {
+          setState(() {
+            //TODO: Bloc pattern einbauen um Widgets neu zu zeichnen :)
+            this.kontostandValue = kontostandDouble;
+          })
+        }
       });
     });
   }

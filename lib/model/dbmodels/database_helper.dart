@@ -78,7 +78,7 @@ class DatabaseHelper {
 
 	Future<double> getKontoStand() async {
 		double kontostand = 0;
-		var transaktionList = await getTransaktionList();
+		var transaktionList = await getTransaktionListSorted();
 		transaktionList.forEach((trans) =>
 		{
 			if (trans.isEinnahme) {
@@ -92,17 +92,17 @@ class DatabaseHelper {
 		return kontostand;
 }
 
-	Future<List<Transaktion>> getTransaktionList() async {
+	Future<List<Transaktion>> getTransaktionListSorted() async {
 
 		var todoMapList = await getTransaktionMapList(); // Get 'Map List' from database
 		int count = todoMapList.length;         // Count the number of map entries in db table
 
 		List<Transaktion> todoList = List<Transaktion>();
-		// For loop to create a 'todo List' from a 'Map List'
 		for (int i = 0; i < count; i++) {
 			todoList.add(Transaktion.fromMapObject(todoMapList[i]));
 		}
-
+		
+		todoList.sort((a, b) => b.datum.compareTo(a.datum));
 		return todoList;
 	}
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TransaktionenScreen extends StatefulWidget {
@@ -13,12 +14,12 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
   DatabaseHelper databaseHelper = new DatabaseHelper();
   List<Transaktion> transList;
   int count = 0;
-
+  final format = new DateFormat('dd.MM.yy');
   void updateListView() {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
     dbFuture.then((database) {
       Future<List<Transaktion>> transListFuture =
-          databaseHelper.getTransaktionList();
+          databaseHelper.getTransaktionListSorted();
       transListFuture.then((transList) {
         setState(() {
           this.transList = transList;
@@ -38,25 +39,28 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
     ListElement(Transaktion transaktion) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: Row(
           children: <Widget>[
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Text(format.format(transaktion.datum)),
                 Text(transaktion.name,
-                ),
-                Text(transaktion.betrag.toString() + " €",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: transaktion.isEinnahme ? Colors.green : Colors.red
-                  ),),
+                    fontSize: 22
+                  ),
+                ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            Spacer(),
+            Column(
               children: <Widget>[
-                Text(transaktion.datum.toLocal().toString()),
+                Text((transaktion.isEinnahme ? "" : "-") + transaktion.betrag.toString() + " €",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      color: transaktion.isEinnahme ? Colors.green : Colors.red
+                  ),),
               ],
             ),
           ],
