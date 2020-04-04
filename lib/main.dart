@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttermoneytracker/bloc/transaktion_bloc.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/kontostand.dart';
 import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
@@ -27,7 +29,9 @@ class MyApp extends StatelessWidget {
         accentColor: Color(0xFFD8ECF1),
         scaffoldBackgroundColor: Color(0xFFF3F5F7),
       ),
-      home: MyHomePage(),
+      home: BlocProvider(
+          create: (BuildContext context) => TransaktionBloc(),
+          child: MyHomePage()),
     );
   }
 }
@@ -94,10 +98,13 @@ class _MyHomePageState extends State<MyHomePage> {
            return SingleChildScrollView(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: AddTransaktionCard(),
-          ));
+            child: BlocProvider(
+              create: (context) => TransaktionBloc(),
+              child: Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: AddTransaktionCard(),
+          ),
+            ));
         });
   }
 

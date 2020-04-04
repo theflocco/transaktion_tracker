@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttermoneytracker/bloc/transaktion_bloc.dart';
+import 'package:fluttermoneytracker/bloc/transaktion_event.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
 
@@ -15,6 +18,8 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
 
   @override
   Widget build(BuildContext context) {
+    TransaktionBloc transaktionBloc = BlocProvider.of<TransaktionBloc>(context);
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -68,10 +73,10 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
                     FloatingActionButton(
                       backgroundColor: Colors.lightGreen,
                       child: Icon(Icons.add),
-                      onPressed: () => addTransaction(true),
+                      onPressed: () => addTransaction(true, transaktionBloc),
                     ),
                     FloatingActionButton(
-                      onPressed: () => addTransaction(false),
+                      onPressed: () => addTransaction(false, transaktionBloc),
                       backgroundColor: Colors.redAccent,
                       child: Icon(Icons.remove),
                     ),
@@ -85,10 +90,12 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
     );
   }
 
-  addTransaction(bool isEinnahme) {
+  addTransaction(bool isEinnahme, TransaktionBloc bloc) {
     if (betragController.value.toString().isNotEmpty) {
       Transaktion einnahme = new Transaktion(nameController.text, double.parse(betragController.text), new DateTime.now(), isEinnahme);
-      this.helper.insertTransaktion(einnahme);
+      //this.helper.insertTransaktion(einnahme);
+      TransaktionEventAdd eventAdd = new TransaktionEventAdd(einnahme);
+      bloc.add(eventAdd);
       Navigator.of(context).pop();
     }
   }
