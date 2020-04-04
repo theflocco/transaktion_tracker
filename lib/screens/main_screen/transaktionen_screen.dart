@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
 import 'package:fluttermoneytracker/screens/main_screen/transaktion_detail_screen.dart';
+import 'package:fluttermoneytracker/widgets/is_einnahme_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -41,27 +42,23 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(format.format(transaktion.datum)),
                 Text(transaktion.name,
                   style: TextStyle(
                     fontSize: 22
                   ),
                 ),
+                Text(format.format(transaktion.datum)),
+
               ],
             ),
-            Spacer(),
             Column(
               children: <Widget>[
-                Text((transaktion.isEinnahme ? "" : "-") + transaktion.betrag.toString() + " €",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                      color: transaktion.isEinnahme ? Colors.green : Colors.red
-                  ),),
+                IsEinnahmeWidget(transaktion: transaktion)
               ],
             ),
           ],
@@ -71,21 +68,41 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
 
     return SafeArea(
       child: Center(
-        child: this.count > 0
+        child: this.transList.length > 0
             ? Container(
                 child: new ListView.builder(
-                    itemCount: this.count,
+                    itemCount: this.transList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => TransaktionDetailScreen(this.transList[index])));
                         },
-                        child: Center(
-                            child:  ListElement(this.transList[index])),
+                        child: Dismissible(
+                          background: Container(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text("Swipe to delete",
+                              style: TextStyle(color: Colors.black,
+                              fontSize: 18),),
+                            ),
+                              color: Colors.red),
+                          key: Key(this.transList[index].id.toString()),
+                          onDismissed: (direction) {
+                            setState(() {
+                              this.databaseHelper.deleteTransaktion(transList[index]);
+                              this.transList.removeAt(index);
+                            });
+                          },
+                          child: Center(
+                              child:  ListElement(this.transList[index])),
+                        ),
                       );
                     }),
               )
-            : Text("Keine Einträge vorhanden"),
+            : Text("Keine Transaktionen vorhanden",
+        style: TextStyle(
+          fontSize: 22
+        ),),
       ),
     );
   }

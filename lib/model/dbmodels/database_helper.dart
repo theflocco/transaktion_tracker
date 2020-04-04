@@ -69,6 +69,14 @@ class DatabaseHelper {
 		return result;
 	}
 
+	Future<int> deleteTransaktion(Transaktion transaktion) async {
+		var id = transaktion.id;
+		Database db = await this.database;
+		int deletedId = await db.rawDelete('DELETE FROM $transaktiontable WHERE $colId = ?', [id]);
+		print('deleted with id: $deletedId');
+		return deletedId;
+	}
+
   	// Get number of todo objects in database
 	Future<int> getCount() async {
 		Database db = await this.database;
