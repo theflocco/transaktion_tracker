@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:fluttermoneytracker/model/transaktion.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as p;
 
 class DatabaseHelper {
   
@@ -45,11 +46,11 @@ class DatabaseHelper {
 
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path + 'todos.db';
+    String path = p.join(directory.path, 'transaktion.db');
     //await deleteDatabase(path);
-    var todosDatabase =
+    var transaktionDatabase =
         await openDatabase(path, version: 1, onCreate: _createDb);
-    return todosDatabase;
+    return transaktionDatabase;
   }
 
   	// Fetch Operation: Get all todo objects from database
