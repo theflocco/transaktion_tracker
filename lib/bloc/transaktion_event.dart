@@ -1,27 +1,34 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
 
-class TransaktionEvent {
-  Transaktion transaktion;
-  TransaktionEvent(Transaktion transaktion) {
-    this.transaktion = transaktion;
-  }
+class TransaktionEvent extends Equatable {
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+
+}
+
+class TransaktionEventIsLoading extends TransaktionEvent {
 
 }
 
 class TransaktionEventAdd extends TransaktionEvent {
+  final Transaktion transaktion;
 
-  TransaktionEventAdd(
-  Transaktion transaktion) : super(transaktion);
+  TransaktionEventAdd({@required this.transaktion});
 
 }
 
 class TransaktionEventDelete extends TransaktionEvent {
-  TransaktionEventDelete(
-      Transaktion transaktion) : super(transaktion);
+  final Transaktion transaktion;
+
+  TransaktionEventDelete({@required this.transaktion});
 }
 
 class TransaktionEventUpdate extends TransaktionEvent {
-  TransaktionEventUpdate(
-      Transaktion transaktion) : super(transaktion);
+  final Transaktion transaktion;
+
+  TransaktionEventUpdate({@required this.transaktion});
 }

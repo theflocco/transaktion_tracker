@@ -14,45 +14,39 @@ class TransaktionBloc extends Bloc<TransaktionEvent, TransaktionState> {
   // TODO: implement initialState
   TransaktionState get initialState => getInitState();
 
-  Future<TransaktionState> fetch() async {
+  Future<List<Transaktion>> fetch() async {
     List<Transaktion> list =  await _helper.getTransaktionListSorted();
-    return new TransaktionState(list);
+    return list;
   }
 
 
   @override
   Stream<TransaktionState> mapEventToState(TransaktionEvent event) async* {
 
+
     if (event is TransaktionEventAdd) {
-      _helper.insertTransaktion(event.transaktion);
+      yield TransaktionIsLoadingState();
+      await _helper.insertTransaktion(event.transaktion);
     } else if ( event is TransaktionEventDelete) {
-      _helper.deleteTransaktion(event.transaktion);
+      yield TransaktionIsLoadingState();
+      await _helper.deleteTransaktion(event.transaktion);
     } else if (event is TransaktionEventUpdate) {
       //TODO: Implement me
+    } else if (event is TransaktionEventIsLoading) {
+      yield TransaktionIsLoadingState();
     }
-    yield* fetch().asStream();
+    final transList = await updateListView();
+    yield TransaktionLoadedState(transList);
   }
-
-  List<Transaktion> get refreshList => updateListView();
 
   TransaktionState getInitState() {
-    Future<Database> dbFuture = _helper.initializeDatabase();
-    dbFuture.then((db) {
-    Future<TransaktionState> listFuture = fetch();
-        listFuture.then((value) {return value;});
-    });
+    return TransaktionIsLoadingState();
   }
 
-
-  List<Transaktion> updateListView() {
-    final Future<Database> dbFuture = _helper.initializeDatabase();
-    dbFuture.then((database) {
-      Future<List<Transaktion>> transListFuture =
-      _helper.getTransaktionListSorted();
-      transListFuture.then((transList) {
-        return transList;
-      });
-    });
+  Future<List<Transaktion>> updateListView() async {
+    Database dbFuture = await _helper.initializeDatabase();
+    Future<List<Transaktion>> listFuture = _helper.getTransaktionListSorted();
+    return listFuture;
   }
 
 

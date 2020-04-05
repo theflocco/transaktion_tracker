@@ -1,5 +1,7 @@
 
-class Transaktion {
+import 'package:equatable/equatable.dart';
+
+class Transaktion extends Equatable{
   int id;
   String name;
   String description;
@@ -43,5 +45,9 @@ class Transaktion {
       return false;
     }
   }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [id, name];
        
 }

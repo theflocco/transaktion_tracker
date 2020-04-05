@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttermoneytracker/bloc/transaction_state.dart';
 import 'package:fluttermoneytracker/bloc/transaktion_bloc.dart';
+import 'package:fluttermoneytracker/bloc/transaktion_event.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
 import 'package:fluttermoneytracker/screens/main_screen/transaktion_detail_screen.dart';
@@ -25,7 +26,7 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
     dbFuture.then((database) {
       Future<List<Transaktion>> transListFuture =
-          databaseHelper.getTransaktionListSorted();
+      databaseHelper.getTransaktionListSorted();
       transListFuture.then((transList) {
         setState(() {
           this.transList = transList;
@@ -35,6 +36,7 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
     });
   }
 
+  /*
   void updateListViewAsync(TransaktionBloc transaktionBloc) {
     Future<TransaktionState> transListFuture = transaktionBloc.fetch();
     transListFuture.then((value) {
@@ -44,6 +46,8 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
     });
   }
 
+   */
+
   @override
   Widget build(BuildContext context) {
     /* if (transList == null) {
@@ -52,9 +56,7 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
     } */
 
     TransaktionBloc transaktionBloc = BlocProvider.of<TransaktionBloc>(context);
-    if (transList == null) {
-      updateListViewAsync(transaktionBloc);
-    }
+    transaktionBloc.add(TransaktionEventIsLoading());
     Widget ListElement(Transaktion transaktion) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
@@ -66,7 +68,7 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
               children: <Widget>[
                 Text(transaktion.name,
                   style: TextStyle(
-                    fontSize: 22
+                      fontSize: 22
                   ),
                 ),
                 Text(format.format(transaktion.datum)),
@@ -84,48 +86,52 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
     }
 
     return SafeArea(
-      child: BlocListener(
+      child: BlocBuilder(
         bloc: transaktionBloc,
-        listener: (context, state) {
-          this.updateListViewAsync(transaktionBloc);
-        },
-        child: Center(
-          child: this.transList != null
-              ? Container(
-                  child: new ListView.builder(
-                      itemCount: this.transList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TransaktionDetailScreen(this.transList[index])));
-                          },
-                          child: Dismissible(
-                            background: Container(
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text("Swipe to delete",
+        builder: (context, TransaktionState state) {
+          return Center(
+            child: state is TransaktionLoadedState
+                ? Container(
+              child: new ListView.builder(
+                  itemCount: state.transList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                TransaktionDetailScreen(
+                                    state.transList[index])));
+                      },
+                      child: Dismissible(
+                        background: Container(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text("Swipe to delete",
                                 style: TextStyle(color: Colors.black,
-                                fontSize: 18),),
-                              ),
-                                color: Colors.red),
-                            key: Key(this.transList[index].id.toString()),
-                            onDismissed: (direction) {
-                              setState(() {
-                                this.databaseHelper.deleteTransaktion(transList[index]);
-                                this.transList.removeAt(index);
-                              });
-                            },
-                            child: Center(
-                                child:  ListElement(this.transList[index])),
-                          ),
-                        );
-                      }),
-                )
-              : Text("Keine Transaktionen vorhanden",
-          style: TextStyle(
-            fontSize: 22
-          ),),
-        ),
+                                    fontSize: 18),),
+                            ),
+                            color: Colors.red),
+                        key: Key(state.transList[index].id.toString()),
+                        onDismissed: (direction) {
+                          setState(() {
+                            this.databaseHelper.deleteTransaktion(
+                                transList[index]);
+                            state.transList.removeAt(index);
+                          });
+                        },
+                        child: Center(
+                            child: ListElement(state.transList[index])),
+                      ),
+                    );
+                  }),
+            )
+                : Text("Keine Transaktionen vorhanden bzw DB läd",
+              style: TextStyle(
+                  fontSize: 22
+              ),
+            ),
+          );
+        },
       ),
     );
   }

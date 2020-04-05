@@ -94,7 +94,7 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
     if (betragController.value.toString().isNotEmpty) {
       Transaktion einnahme = new Transaktion(nameController.text, double.parse(betragController.text), new DateTime.now(), isEinnahme);
       //this.helper.insertTransaktion(einnahme);
-      TransaktionEventAdd eventAdd = new TransaktionEventAdd(einnahme);
+      TransaktionEventAdd eventAdd = new TransaktionEventAdd(transaktion: einnahme);
       bloc.add(eventAdd);
       Navigator.of(context).pop();
     }
