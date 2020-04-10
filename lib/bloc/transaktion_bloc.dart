@@ -35,6 +35,9 @@ class TransaktionBloc extends Bloc<TransaktionEvent, TransaktionState> {
       //TODO: Implement me
     } else if (event is TransaktionEventIsLoading) {
       yield TransaktionIsLoadingState();
+    } else if (event is TransaktionEventGetKontostand) {
+      yield* _reloadKontostand();
+      return;
     }
     yield* _reloadTransaktions();
   }
@@ -43,5 +46,21 @@ class TransaktionBloc extends Bloc<TransaktionEvent, TransaktionState> {
     final transaktions = await _helper.getTransaktionListSorted();
     yield TransaktionLoadedState(transaktions);
   }
+
+  Stream<TransaktionState> _reloadKontostand() async* {
+    final transaktionList = await _helper.getTransaktionListSorted();
+    double kontostand = 0;
+    transaktionList.forEach((trans) =>
+    {
+      if (trans.isEinnahme) {
+        kontostand += trans.betrag
+      } else
+        {
+          kontostand -= trans.betrag
+        }
+    });
+    yield TransaktionKontostandLoaded(kontostand);
+  }
+
 
 }

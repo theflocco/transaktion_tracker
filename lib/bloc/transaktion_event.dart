@@ -27,6 +27,10 @@ class TransaktionEventDelete extends TransaktionEvent {
   TransaktionEventDelete(this.transaktion);
 }
 
+class TransaktionEventGetKontostand extends TransaktionEvent {
+
+}
+
 class TransaktionEventUpdate extends TransaktionEvent {
   final Transaktion transaktion;
 

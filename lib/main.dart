@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttermoneytracker/bloc/transaktion_bloc.dart';
 
 import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
-import 'package:fluttermoneytracker/screens/main_screen/main_screen.dart';
-import 'package:fluttermoneytracker/screens/main_screen/transaktionen_screen.dart';
+import 'package:fluttermoneytracker/screens/main_screen/kontostand_screen.dart';
+import 'package:fluttermoneytracker/screens/main_screen/transaktion_list_screen.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqlcool/sqlcool.dart';
 
@@ -47,8 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
-    MainScreen(),
-    TransaktionenScreen(),
+    KontostandScreen(),
+    TransaktionListScreen(),
   ];
 
   void _onItemTapped(int index) {
