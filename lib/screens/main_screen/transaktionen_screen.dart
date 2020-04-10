@@ -17,47 +17,22 @@ class TransaktionenScreen extends StatefulWidget {
 }
 
 class _TransaktionenScreenState extends State<TransaktionenScreen> {
-  DatabaseHelper databaseHelper = new DatabaseHelper();
+  TransaktionBloc _transaktionBloc;
+
   List<Transaktion> transList;
   int count = 0;
   final format = new DateFormat('dd.MM.yy');
 
-  void updateListView() {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    dbFuture.then((database) {
-      Future<List<Transaktion>> transListFuture =
-      databaseHelper.getTransaktionListSorted();
-      transListFuture.then((transList) {
-        setState(() {
-          this.transList = transList;
-          this.count = transList.length;
-        });
-      });
-    });
+  @override
+  void initState() {
+    super.initState();
+    _transaktionBloc = BlocProvider.of<TransaktionBloc>(context);
+    _transaktionBloc.add(TransaktionEventIsLoading());
   }
-
-  /*
-  void updateListViewAsync(TransaktionBloc transaktionBloc) {
-    Future<TransaktionState> transListFuture = transaktionBloc.fetch();
-    transListFuture.then((value) {
-      setState(() {
-        transList = value.transList;
-      });
-    });
-  }
-
-   */
 
   @override
   Widget build(BuildContext context) {
-    /* if (transList == null) {
-      transList = List<Transaktion>();
-      updateListView();
-    } */
-
-    TransaktionBloc transaktionBloc = BlocProvider.of<TransaktionBloc>(context);
-    transaktionBloc.add(TransaktionEventIsLoading());
-    Widget ListElement(Transaktion transaktion) {
+    Widget listElement(Transaktion transaktion) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -66,19 +41,15 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(transaktion.name,
-                  style: TextStyle(
-                      fontSize: 22
-                  ),
+                Text(
+                  transaktion.name,
+                  style: TextStyle(fontSize: 22),
                 ),
                 Text(format.format(transaktion.datum)),
-
               ],
             ),
             Column(
-              children: <Widget>[
-                IsEinnahmeWidget(transaktion: transaktion)
-              ],
+              children: <Widget>[IsEinnahmeWidget(transaktion: transaktion)],
             ),
           ],
         ),
@@ -87,54 +58,55 @@ class _TransaktionenScreenState extends State<TransaktionenScreen> {
 
     return SafeArea(
       child: BlocBuilder(
-        bloc: transaktionBloc,
+        bloc: _transaktionBloc,
         builder: (context, TransaktionState state) {
           return Center(
             child: state is TransaktionLoadedState
                 ? Container(
-              child: new ListView.builder(
-                  itemCount: state.transList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) =>
-                                TransaktionDetailScreen(
-                                    state.transList[index])));
-                      },
-                      child: Dismissible(
-                        background: Container(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text("Swipe to delete",
-                                style: TextStyle(color: Colors.black,
-                                    fontSize: 18),),
+                    child: new ListView.builder(
+                        itemCount: state.transList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final displayedTransaktion = state.transList[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TransaktionDetailScreen(
+                                              displayedTransaktion)));
+                            },
+                            child: Dismissible(
+                              background: Container(
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "Swipe to delete",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 18),
+                                    ),
+                                  ),
+                                  color: Colors.red),
+                              key: Key(displayedTransaktion.id.toString()),
+                              onDismissed: (direction) {
+                                setState(() {
+                                  _transaktionBloc.add(TransaktionEventDelete(
+                                      displayedTransaktion));
+                                });
+                              },
+                              child: Center(
+                                  child: listElement(displayedTransaktion)),
                             ),
-                            color: Colors.red),
-                        key: Key(state.transList[index].id.toString()),
-                        onDismissed: (direction) {
-                          setState(() {
-                            this.databaseHelper.deleteTransaktion(
-                                transList[index]);
-                            state.transList.removeAt(index);
-                          });
-                        },
-                        child: Center(
-                            child: ListElement(state.transList[index])),
-                      ),
-                    );
-                  }),
-            )
-                : Text("Keine Transaktionen vorhanden bzw DB läd",
-              style: TextStyle(
-                  fontSize: 22
-              ),
-            ),
+                          );
+                        }),
+                  )
+                : Text(
+                    "Keine Transaktionen vorhanden bzw DB läd",
+                    style: TextStyle(fontSize: 22),
+                  ),
           );
         },
       ),
     );
   }
-
-
 }

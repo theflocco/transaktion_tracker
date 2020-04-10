@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttermoneytracker/bloc/transaktion_bloc.dart';
-import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
-import 'package:fluttermoneytracker/model/kontostand.dart';
+
 import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
 import 'package:fluttermoneytracker/screens/main_screen/main_screen.dart';
 import 'package:fluttermoneytracker/screens/main_screen/transaktionen_screen.dart';
@@ -19,19 +18,20 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'TransactionApp',
-      theme: ThemeData(
-        bottomSheetTheme:
-            BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
-        primaryColor: Color(0xFF3EBACE),
-        accentColor: Color(0xFFD8ECF1),
-        scaffoldBackgroundColor: Color(0xFFF3F5F7),
+    return BlocProvider(
+      create: (BuildContext context) => TransaktionBloc(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'TransactionApp',
+        theme: ThemeData(
+          bottomSheetTheme:
+              BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
+          primaryColor: Color(0xFF3EBACE),
+          accentColor: Color(0xFFD8ECF1),
+          scaffoldBackgroundColor: Color(0xFFF3F5F7),
+        ),
+        home: MyHomePage(),
       ),
-      home: BlocProvider(
-          create: (BuildContext context) => TransaktionBloc(),
-          child: MyHomePage()),
     );
   }
 }
@@ -44,7 +44,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
 
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
@@ -60,8 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       bottomNavigationBar: BottomNavigationBar(
@@ -98,13 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
            return SingleChildScrollView(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: BlocProvider(
-              create: (context) => TransaktionBloc(),
-              child: Container(
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  child: AddTransaktionCard(),
-          ),
-            ));
+            child: Container(
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: AddTransaktionCard(),
+          ));
         });
   }
 

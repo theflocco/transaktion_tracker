@@ -11,18 +11,19 @@ class TransaktionBloc extends Bloc<TransaktionEvent, TransaktionState> {
   DatabaseHelper _helper = new DatabaseHelper();
 
   @override
-  // TODO: implement initialState
   TransaktionState get initialState => getInitState();
+
+  TransaktionState getInitState() {
+    return TransaktionIsLoadingState();
+  }
 
   Future<List<Transaktion>> fetch() async {
     List<Transaktion> list =  await _helper.getTransaktionListSorted();
     return list;
   }
 
-
   @override
   Stream<TransaktionState> mapEventToState(TransaktionEvent event) async* {
-
 
     if (event is TransaktionEventAdd) {
       yield TransaktionIsLoadingState();
@@ -35,20 +36,12 @@ class TransaktionBloc extends Bloc<TransaktionEvent, TransaktionState> {
     } else if (event is TransaktionEventIsLoading) {
       yield TransaktionIsLoadingState();
     }
-    final transList = await updateListView();
-    yield TransaktionLoadedState(transList);
+    yield* _reloadTransaktions();
   }
 
-  TransaktionState getInitState() {
-    return TransaktionIsLoadingState();
+  Stream<TransaktionState> _reloadTransaktions() async* {
+    final transaktions = await _helper.getTransaktionListSorted();
+    yield TransaktionLoadedState(transaktions);
   }
-
-  Future<List<Transaktion>> updateListView() async {
-    Database dbFuture = await _helper.initializeDatabase();
-    Future<List<Transaktion>> listFuture = _helper.getTransaktionListSorted();
-    return listFuture;
-  }
-
-
 
 }

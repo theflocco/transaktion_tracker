@@ -15,10 +15,16 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
   final TextEditingController betragController = new TextEditingController();
   final TextEditingController nameController = new TextEditingController();
   DatabaseHelper helper = new DatabaseHelper();
+  TransaktionBloc _transaktionBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _transaktionBloc = BlocProvider.of<TransaktionBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    TransaktionBloc transaktionBloc = BlocProvider.of<TransaktionBloc>(context);
 
     return SingleChildScrollView(
       child: Padding(
@@ -73,10 +79,14 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
                     FloatingActionButton(
                       backgroundColor: Colors.lightGreen,
                       child: Icon(Icons.add),
-                      onPressed: () => addTransaction(true, transaktionBloc),
+                      onPressed: () {
+                        addTransaction(true);
+                      }
                     ),
                     FloatingActionButton(
-                      onPressed: () => addTransaction(false, transaktionBloc),
+                      onPressed: () {
+                        addTransaction(false);
+                      },
                       backgroundColor: Colors.redAccent,
                       child: Icon(Icons.remove),
                     ),
@@ -90,12 +100,11 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
     );
   }
 
-  addTransaction(bool isEinnahme, TransaktionBloc bloc) {
+  addTransaction(bool isEinnahme) {
     if (betragController.value.toString().isNotEmpty) {
       Transaktion einnahme = new Transaktion(nameController.text, double.parse(betragController.text), new DateTime.now(), isEinnahme);
-      //this.helper.insertTransaktion(einnahme);
-      TransaktionEventAdd eventAdd = new TransaktionEventAdd(transaktion: einnahme);
-      bloc.add(eventAdd);
+      TransaktionEventAdd eventAdd = new TransaktionEventAdd(einnahme);
+      _transaktionBloc.add(eventAdd);
       Navigator.of(context).pop();
     }
   }

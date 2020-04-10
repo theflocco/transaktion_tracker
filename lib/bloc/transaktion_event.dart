@@ -17,14 +17,14 @@ class TransaktionEventIsLoading extends TransaktionEvent {
 class TransaktionEventAdd extends TransaktionEvent {
   final Transaktion transaktion;
 
-  TransaktionEventAdd({@required this.transaktion});
+  TransaktionEventAdd(this.transaktion);
 
 }
 
 class TransaktionEventDelete extends TransaktionEvent {
   final Transaktion transaktion;
 
-  TransaktionEventDelete({@required this.transaktion});
+  TransaktionEventDelete(this.transaktion);
 }
 
 class TransaktionEventUpdate extends TransaktionEvent {
