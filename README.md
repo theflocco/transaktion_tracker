@@ -5,8 +5,8 @@ Track your money
 
 ## TODO
 
-- Hot reload Liste -> mit blocs
-- Kontostand fixen -> mit blocs
+- Hot reload Liste -> mit blocs DONE
+- Kontostand fixen -> mit blocs DONE
 - Detail Screen für einzelne Transaktionen aufhübschen + Edit
 - Mainscreen: aktueller Monat + Last month Cards
 
