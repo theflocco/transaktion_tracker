@@ -20,7 +20,8 @@ class _TransaktionListScreenState extends State<TransaktionListScreen> {
   List<Transaktion> transList;
   int count = 0;
   final format = new DateFormat('dd.MM.yy');
-  static final NO_TRANSACTIONS_STRING = "Keine Transaktionen vorhanden bzw DB läd";
+  static final NO_TRANSACTIONS_STRING =
+      "Keine Transaktionen vorhanden bzw DB läd";
   static final SWIPE_TO_DELETE = "Swipe to delete";
 
   @override
@@ -64,56 +65,60 @@ class _TransaktionListScreenState extends State<TransaktionListScreen> {
             return Center(
               child: state is TransaktionLoadedState
                   ? Container(
-                child: new ListView.builder(
-                    itemCount: state.transList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final displayedTransaktion = state.transList[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      TransaktionDetailScreen(
-                                          displayedTransaktion)));
-                        },
-                        child: Dismissible(
-                          background: Container(
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  SWIPE_TO_DELETE,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 18),
-                                ),
-                              ),
-                              color: Colors.red),
-                          key: Key(displayedTransaktion.id.toString()),
-                          onDismissed: (direction) {
-                            setState(() {
-                              _transaktionBloc.add(TransaktionEventDelete(
-                                  displayedTransaktion));
-                            });
-                          },
-                          child: Center(
-                              child: listElement(displayedTransaktion)),
-                        ),
-                      );
-                    }),
-              )
-                  : Text(
-                NO_TRANSACTIONS_STRING,
-                style: TextStyle(fontSize: 22),
-              ),
+                      child: state.transList.length > 0
+                          ? new ListView.builder(
+                              itemCount: state.transList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final displayedTransaktion =
+                                    state.transList[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TransaktionDetailScreen(
+                                                    displayedTransaktion)));
+                                  },
+                                  child: Dismissible(
+                                    background: Container(
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            SWIPE_TO_DELETE,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18),
+                                          ),
+                                        ),
+                                        color: Colors.red),
+                                    key:
+                                        Key(displayedTransaktion.id.toString()),
+                                    onDismissed: (direction) {
+                                      setState(() {
+                                        _transaktionBloc.add(
+                                            TransaktionEventDelete(
+                                                displayedTransaktion));
+                                      });
+                                    },
+                                    child: Center(
+                                        child:
+                                            listElement(displayedTransaktion)),
+                                  ),
+                                );
+                              })
+                          : Text(
+                              "Füge Transaktionen hinzu!",
+                              style: TextStyle(fontSize: 22),
+                            ),
+                    )
+                  : CircularProgressIndicator(),
             );
           },
         ),
       );
     }
-    
+
     return createTransaktionList();
   }
-  
-
-
 }

@@ -14,6 +14,7 @@ class AddTransaktionCard extends StatefulWidget {
 class _AddTransaktionCardState extends State<AddTransaktionCard> {
   final TextEditingController betragController = new TextEditingController();
   final TextEditingController nameController = new TextEditingController();
+  final TextEditingController descriptionController = new TextEditingController();
   DatabaseHelper helper = new DatabaseHelper();
   TransaktionBloc _transaktionBloc;
 
@@ -73,6 +74,17 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
                     ),
                   ],
                 ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextField(
+                      controller: descriptionController,
+                      style: TextStyle(fontSize: 18),
+                      decoration: InputDecoration(
+                          border: InputBorder.none, hintText: 'Beschreibung eingeben'),
+                    ),
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
@@ -103,6 +115,7 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
   addTransaction(bool isEinnahme) {
     if (betragController.value.toString().isNotEmpty) {
       Transaktion einnahme = new Transaktion(nameController.text, double.parse(betragController.text), new DateTime.now(), isEinnahme);
+      einnahme.description = descriptionController.text;
       TransaktionEventAdd eventAdd = new TransaktionEventAdd(einnahme);
       _transaktionBloc.add(eventAdd);
       Navigator.of(context).pop();

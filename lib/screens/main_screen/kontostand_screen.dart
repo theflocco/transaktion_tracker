@@ -64,7 +64,7 @@ class _KontostandScreenState extends State<KontostandScreen> {
               ),
             ],
           ),
-        ) : Text("Loading");
+        ) : CircularProgressIndicator();
       },
     );
 
