@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttermoneytracker/bloc/transaktion_bloc.dart';
+import 'package:fluttermoneytracker/kontostand_bloc/kontostand_bloc.dart';
 
 import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
 import 'package:fluttermoneytracker/screens/main_screen/kontostand_screen.dart';
 import 'package:fluttermoneytracker/screens/main_screen/transaktion_list_screen.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqlcool/sqlcool.dart';
+import 'package:fluttermoneytracker/transaction_bloc/transaktion_bloc.dart';
 
-import 'model/transaktion.dart';
 
 void main() {
   runApp(MyApp());
@@ -47,7 +45,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
-    KontostandScreen(),
+    BlocProvider(
+        create: (BuildContext context) => KontostandBloc(),
+        child: KontostandScreen()),
     TransaktionListScreen(),
   ];
 
