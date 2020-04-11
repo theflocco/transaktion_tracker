@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaction_state.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaktion_event.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaction_state.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaktion_event.dart';
 
 class TransaktionBloc extends Bloc<TransaktionEvent, TransaktionState> {
   DatabaseHelper _helper = new DatabaseHelper();

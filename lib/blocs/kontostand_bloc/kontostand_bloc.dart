@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttermoneytracker/kontostand_bloc/kontostand_event.dart';
-import 'package:fluttermoneytracker/kontostand_bloc/kontostand_state.dart';
+import 'package:fluttermoneytracker/blocs/kontostand_bloc/kontostand_event.dart';
+import 'package:fluttermoneytracker/blocs/kontostand_bloc/kontostand_state.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 
 class KontostandBloc extends Bloc<KontostandEvent, KontostandState> {

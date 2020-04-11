@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttermoneytracker/kontostand_bloc/kontostand_bloc.dart';
+import 'package:fluttermoneytracker/blocs/kontostand_bloc/kontostand_bloc.dart';
 
 import 'package:fluttermoneytracker/screens/add_transaktion_card.dart';
 import 'package:fluttermoneytracker/screens/main_screen/kontostand_screen.dart';
 import 'package:fluttermoneytracker/screens/main_screen/transaktion_list_screen.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaktion_bloc.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaktion_bloc.dart';
 
 
 void main() {

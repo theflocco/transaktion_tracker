@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttermoneytracker/kontostand_bloc/kontostand_bloc.dart';
-import 'package:fluttermoneytracker/kontostand_bloc/kontostand_event.dart';
-import 'package:fluttermoneytracker/kontostand_bloc/kontostand_state.dart';
+import 'package:fluttermoneytracker/blocs/kontostand_bloc/kontostand_bloc.dart';
+import 'package:fluttermoneytracker/blocs/kontostand_bloc/kontostand_event.dart';
+import 'package:fluttermoneytracker/blocs/kontostand_bloc/kontostand_state.dart';
 
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/kontostand.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaction_state.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaction_state.dart';
 
 
 class KontostandScreen extends StatefulWidget {

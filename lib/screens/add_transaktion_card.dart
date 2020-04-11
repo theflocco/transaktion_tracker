@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaktion_bloc.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaktion_event.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaktion_bloc.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaktion_event.dart';
 
 class AddTransaktionCard extends StatefulWidget {
   @override

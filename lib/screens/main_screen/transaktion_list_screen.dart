@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
 import 'package:fluttermoneytracker/screens/main_screen/transaktion_detail_screen.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaction_state.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaktion_bloc.dart';
-import 'package:fluttermoneytracker/transaction_bloc/transaktion_event.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaction_state.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaktion_bloc.dart';
+import 'package:fluttermoneytracker/blocs/transaction_bloc/transaktion_event.dart';
 import 'package:fluttermoneytracker/widgets/is_einnahme_widget.dart';
 import 'package:intl/intl.dart';
 
