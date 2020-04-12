@@ -26,6 +26,7 @@ dependencies:
   bloc: ^3.0.0
   flutter_bloc:
   equatable:
+  simple_animations:
 
 
   # The following adds the Cupertino Icons font to your application.

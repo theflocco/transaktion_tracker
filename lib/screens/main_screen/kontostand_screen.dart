@@ -8,6 +8,7 @@ import 'package:fluttermoneytracker/blocs/kontostand_bloc/kontostand_state.dart'
 import 'package:fluttermoneytracker/model/dbmodels/database_helper.dart';
 import 'package:fluttermoneytracker/model/kontostand.dart';
 import 'package:fluttermoneytracker/blocs/transaction_bloc/transaction_state.dart';
+import 'package:fluttermoneytracker/widgets/kontostand_bar_chart.dart';
 
 
 class KontostandScreen extends StatefulWidget {
@@ -58,6 +59,7 @@ class _KontostandScreenState extends State<KontostandScreen> {
                             .textTheme
                             .display1,
                       ),
+                    KontostandBarChart(),
                     ],
                   ),
                 ),
