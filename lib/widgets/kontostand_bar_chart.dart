@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttermoneytracker/model/transaktion.dart';
+import 'package:intl/intl.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class KontostandBarChart extends StatefulWidget {
@@ -15,13 +16,14 @@ class _KontostandBarChartState extends State<KontostandBarChart> {
       "Mockmockmock2", 150, DateTime.now(), true);
   static Transaktion transaktion3 = new Transaktion(
       "Mockmockmockmock3", 15, DateTime.now(), true);
-  List<Transaktion> mockList = [transaktion1, transaktion2, transaktion3];
+  List<Transaktion> mockList = [transaktion1, transaktion2, transaktion3, transaktion1, transaktion2];
 
   @override
   Widget build(BuildContext context) {
     return Container(
+
       decoration: BoxDecoration(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
           BoxShadow(
             color: Colors.black38,
@@ -74,16 +76,21 @@ class SingleBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Container(
-                  color: Theme.of(context).accentColor,
                   width: 20,
                   height: (1 - _animatedHeight) * _maxElementHeight,
                 ),
                 Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.blue, Colors.red]
+                    )
+                  ),
                   width: 20,
                   height: _animatedHeight * _maxElementHeight,
-                  color: Colors.green,
                 ),
-                Text(transaktion.name.toString(),
+                Text(transaktion.betrag.toString(),
                   style: TextStyle(fontSize: 18,
                       fontWeight: FontWeight.w500),)
               ],

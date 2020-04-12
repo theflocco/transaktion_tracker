@@ -79,9 +79,20 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+      floatingActionButton: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
+          child: Text("Neue Transaktion",
+          style: TextStyle(
+              fontSize: 18.0,
+            color: Colors.white,
+          ),
+      ),
+        ),
+        color: Colors.blue,
         onPressed: () => onButtonPressed(context),
       ),
     );

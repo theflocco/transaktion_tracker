@@ -17,6 +17,7 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
   final TextEditingController descriptionController = new TextEditingController();
   DatabaseHelper helper = new DatabaseHelper();
   TransaktionBloc _transaktionBloc;
+  bool showInfo = false;
 
   @override
   void initState() {
@@ -26,7 +27,6 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
 
   @override
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -43,13 +43,18 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
             color: Colors.white,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(18.0, 18, 8, 18),
             child: Column(
               children: <Widget>[
                 Text(
                   "Transaktion hinzufügen",
                   style: TextStyle(fontSize: 22),
                 ),
+                showInfo ? Text("Bitte Betrag und Name eingeben",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 18
+                ),) : Text(""),
                 SizedBox(height: 10,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,12 +118,16 @@ class _AddTransaktionCardState extends State<AddTransaktionCard> {
   }
 
   addTransaction(bool isEinnahme) {
-    if (betragController.value.toString().isNotEmpty) {
+    if (betragController.value.text.isNotEmpty && nameController.value.text.isNotEmpty) {
       Transaktion einnahme = new Transaktion(nameController.text, double.parse(betragController.text), new DateTime.now(), isEinnahme);
       einnahme.description = descriptionController.text;
       TransaktionEventAdd eventAdd = new TransaktionEventAdd(einnahme);
       _transaktionBloc.add(eventAdd);
       Navigator.of(context).pop();
+    } else {
+      setState(() {
+        this.showInfo = true;
+      });
     }
   }
 }
